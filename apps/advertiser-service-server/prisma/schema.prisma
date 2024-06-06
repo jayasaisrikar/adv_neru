@@ -1,0 +1,49 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model AdLocation {
+  advertiser   Advertiser? @relation(fields: [advertiserId], references: [id])
+  advertiserId String?
+  createdAt    DateTime    @default(now())
+  id           String      @id @default(cuid())
+  locationName String?
+  updatedAt    DateTime    @updatedAt
+  virtualWorld String?
+}
+
+model AdSpend {
+  advertiser   Advertiser? @relation(fields: [advertiserId], references: [id])
+  advertiserId String?
+  amount       Float?
+  createdAt    DateTime    @default(now())
+  date         DateTime?
+  id           String      @id @default(cuid())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Advertiser {
+  adLocations     AdLocation[]
+  adSpends        AdSpend[]
+  businessCryptos BusinessCrypto[]
+  createdAt       DateTime         @default(now())
+  email           String?
+  id              String           @id @default(cuid())
+  name            String?
+  updatedAt       DateTime         @updatedAt
+}
+
+model BusinessCrypto {
+  advertiser     Advertiser? @relation(fields: [advertiserId], references: [id])
+  advertiserId   String?
+  amountAcquired Float?
+  createdAt      DateTime    @default(now())
+  dateAcquired   DateTime?
+  id             String      @id @default(cuid())
+  updatedAt      DateTime    @updatedAt
+}
